@@ -1,0 +1,16 @@
+#
+# German strings file 
+#
+# Scaled Fonts
+#
+fourFont=Brady Bunch Remastered,1,20
+threeFont=Brady Bunch Remastered,1,26
+defaultFont=Brady Bunch Remastered,1,36
+largeFont=Brady Bunch Remastered,1,46
+
+#
+# Strings
+#
+
+t0=Rundenende
+

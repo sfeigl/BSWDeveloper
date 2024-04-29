@@ -1,0 +1,19 @@
+#
+# Drachenherz.string : German strings file for BSW DrachenherzBoard.class
+#
+# Scaled Fonts
+#
+fourFont=Product Sans,1,20
+threeFont=Product Sans,1,26
+defaultFont=Product Sans,1,36
+largeFont=Product Sans,1,46
+
+#
+# Strings
+#
+
+t0=Neuberechnen der Grafik
+
+h0=Sicher, keine Wertung?
+h1=Alle Aktionsplätze müssen belegt sein.
+

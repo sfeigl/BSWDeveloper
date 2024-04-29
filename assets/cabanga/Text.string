@@ -1,0 +1,19 @@
+#
+# Drachenherz.string : German strings file for BSW DrachenherzBoard.class
+#
+# Scaled Fonts
+#
+fourFont=BodegaSans-Medium,0,20
+threeFont=BodegaSans-Medium,0,26
+defaultFont=BodegaSans-Medium,0,36
+largeFont=BodegaSans-Medium,0,46
+
+#
+# Strings
+#
+
+t0=Neuberechnen der Grafik
+
+h0=Sicher, keine Wertung?
+h1=Alle Aktionsplätze müssen belegt sein.
+

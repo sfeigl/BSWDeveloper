@@ -1,16 +1,16 @@
 #
-# Text.string : Properties for the Board
+# German strings file 
 #
 # Scaled Fonts
 #
-fourFont=Calligraphic,0,20
-threeFont=Calligraphic,0,26
-defaultFont=Calligraphic,0,40
-largeFont=Calligraphic,0,46
+fourFont=Brady Bunch Remastered,1,20
+threeFont=Brady Bunch Remastered,1,26
+defaultFont=Brady Bunch Remastered,1,36
+largeFont=Brady Bunch Remastered,1,46
 
 #
 # Strings
 #
 
-t0=Laufendes Spiel
-t1=Mitspieler
+t0=Rundenende
+
