@@ -25,7 +25,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -33,11 +35,15 @@ import java.util.Properties;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import de.Data;
 import de.brettspielwelt.client.Client;
+import de.brettspielwelt.client.media.BSWDevSound;
 import de.brettspielwelt.develop.ClientPanel;
 import de.brettspielwelt.develop.Main;
 import de.brettspielwelt.shared.tools.JavaVersionChecker;
@@ -74,7 +80,9 @@ public class BaseBoard extends JPanel implements ClientPanel,
 
 	String prefix="game";
 	public Properties props=new Properties();
-	
+
+	private Clip[] soundPackClips;
+
 //	public int getWidth() {
 //		return 1220;
 //	}
@@ -103,34 +111,41 @@ public class BaseBoard extends JPanel implements ClientPanel,
 		Main.info.doAnswer(d.typ,spielerNr,d);
 	}
 	
-	public void getBaseSoundPack(){
-//		String[] sound=new String[] {"ok.wav","error.wav","chimes.wav","drumroll.wav","fight.wav","what.wav","yipee.wav","ah-ah.wav","dice.wav","swipe.wav","scream.wav","kling.wav","bazbuy.wav","pop.wav","baer.wav","jaeger.wav","ente.wav","open.wav","blabla.wav","neuling.wav"};
-//		Prepare.consoleLog("Getting ase sound file: base");
-//		String packName="base";
-//		if(baseClips==null){
-//			baseClips=new Sounds(packName,sound);
-//			baseClips.loadS(packName, null);
-//		}
-	}
+	public boolean getSoundPack(String subdir,String[] sounds){
+		Clip[] loadedClips = new Clip[sounds.length];
+		File assetDir = new File("assets");
+		if ("base".equals(subdir)) {
+			sounds = new String[] {"ok.wav","error.wav","chimes.wav","drumroll.wav","fight.wav","what.wav","yipee.wav","ah-ah.wav","dice.wav","swipe.wav","scream.wav","kling.wav","bazbuy.wav","pop.wav","baer.wav","jaeger.wav","ente.wav","open.wav","blabla.wav","neuling.wav"};
+		}
+		if (subdir != null) {
+			assetDir = new File(assetDir, subdir);
+		}
 
-	public boolean getSoundPack(String o,String[] sound){
-//		Prepare.consoleLog("Getting sound file: "+prefix);
-//		String packName=prefix;
-//		if(o!=null) packName=o;
-//		if(clips==null){
-//			//if(packName!=null && packName.equals("base")) clips=Prepare.baseClips;
-//			//else{
-//				clips=new Sounds(packName,sound);
-//				clips.loadS(packName, null);
-//			//}
-//			//Prepare.audioStore.put(packName, clips);
-//		}
+		int clipCount = 0;
+		for (String soundFileName : sounds) {
+			File soundFile = new File(assetDir, soundFileName);
+			try (InputStream inputStream = new FileInputStream(soundFile)){
+				try (BufferedInputStream bufferedStream = new BufferedInputStream(inputStream)) {
+					loadedClips[clipCount++] = BSWDevSound.instance().getClip(bufferedStream);
+				}
+			} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+				loadedClips[clipCount++] = null;
+				System.err.println("Cannot load clip " + soundFileName);
+			}
+		}
+		this.soundPackClips = loadedClips;
 		return true;
 	}
 	
 	public void playSound(int id){
-//		if(pauseMode==-1)
-//			clips.playSound(id);
+		if (soundPackClips != null && id >= 0 && id < soundPackClips.length) {
+			Clip clip = soundPackClips[id];
+			if (clip != null) {
+				clip.stop();
+				clip.setMicrosecondPosition(0);
+				clip.start();
+			}
+		}
 	}
 	
 	
