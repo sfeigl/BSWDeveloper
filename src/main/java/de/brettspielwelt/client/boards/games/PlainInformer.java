@@ -29,6 +29,10 @@ public class PlainInformer implements Serializable{
 			spieler[i]=new GameReceiver(boards.get(i));
 			spieler[i].setName("Player-"+i);
 		}
+		if (!runningGame) {
+			reset();
+		}
+		sendBoard();
 	}
 	public void removeBoard(BaseBoard b) {
 		boards.remove(b);
@@ -38,12 +42,16 @@ public class PlainInformer implements Serializable{
 			spieler[i]=new GameReceiver(boards.get(i));
 			spieler[i].setName("Player-"+i);
 		}
+		if (!runningGame) {
+			reset();
+		}
+		sendBoard();
 	}
 
-	boolean runningGame=true;
+	boolean runningGame=false;
 	
 	public boolean isRunningGame() {
-		return true;
+		return runningGame;
 	}
 	public void okayTimer(int curPl) {
 	}
@@ -55,9 +63,10 @@ public class PlainInformer implements Serializable{
 	public void spielEnde() {
 	}
 	public void spielStart() {
+		runningGame=true;
 	}
 	public void reset() {
-		
+		runningGame=false;
 	}
 	public void doAnswer(int command,int plNr,Data dat){
 	}
