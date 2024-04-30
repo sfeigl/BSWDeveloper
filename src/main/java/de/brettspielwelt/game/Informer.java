@@ -18,7 +18,11 @@ public class Informer extends PlainInformer implements Serializable{
 	public Informer(){
 		baseInit();
 	}
-	
+
+	public int getMinMaxPlayer() {
+		return (2 << 16) | 4;
+	}
+
 	// ----------------------- Init and Starting of Game: reset() / spielStart()  
 	public void spielStart() {
 		baseInit();

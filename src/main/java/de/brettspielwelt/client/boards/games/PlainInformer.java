@@ -21,6 +21,11 @@ public class PlainInformer implements Serializable{
 	public String getSpielClient() {
 		return "game";
 	}
+
+	public int getMinMaxPlayer() {
+		return 0;
+	}
+
 	public void setBoard(BaseBoard b) {
 		boards.add(b);
 		anzMitSpieler=boards.size();

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -29,7 +28,7 @@ import de.brettspielwelt.game.Informer;
 
 public class Main extends JFrame {
     private JPanel canvasPanel;
-    private JButton addButton,removeButton;
+    private JButton addButton,removeButton,startButton;
     private int canvasCount;
     public static PlainInformer info;
     
@@ -126,8 +125,8 @@ public class Main extends JFrame {
                 info.sendComplete();
             }
         });
-        JButton start=new JButton("Start");
-        start.addActionListener(new ActionListener() {
+        startButton=new JButton("Start");
+        startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 info.spielStart();
             }
@@ -137,7 +136,7 @@ public class Main extends JFrame {
         bottomBar.add(reload);
         seperate(bottomBar, upload);
         bottomBar.add(reset);
-        bottomBar.add(start);
+        bottomBar.add(startButton);
         // Create the "Add" button
         addButton = new JButton("+");
         addButton.addActionListener(new ActionListener() {
@@ -165,7 +164,7 @@ public class Main extends JFrame {
 
         // Create the main panel for the canvas
         mainPanel = new JPanel();
-        GridLayout gL=new GridLayout(1, 1);
+        BoardLayout gL=new BoardLayout();
         mainPanel.setLayout(gL);
         canvas = new BaseCanvas(0);
 //        canvas.setPreferredSize(new Dimension(1220, 784));
@@ -176,8 +175,8 @@ public class Main extends JFrame {
         
         
         canvasPanel = new JPanel();
-        gridLayout=new GridLayout(1, 2);
-        canvasPanel.setLayout(gridLayout);
+        boardLayout=new BoardLayout();
+        canvasPanel.setLayout(boardLayout);
         splitPane= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, canvasPanel);
         splitPane.setContinuousLayout(true);
         // Add the main panel to the frame
@@ -186,9 +185,11 @@ public class Main extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                updateGridLayout();
+                canvasPanel.revalidate();
             }
         });
+
+        updateButtons();
     }
 
 	private void seperate(JPanel bottomBar, JButton upload) {
@@ -200,24 +201,12 @@ public class Main extends JFrame {
     JPanel mainPanel;
     BaseCanvas canvas;
     JSplitPane splitPane;
-    GridLayout gridLayout;
+    BoardLayout boardLayout;
     
-    private void updateGridLayout() {
-        int panelWidth = canvasPanel.getWidth();
-        int panelHeight = canvasPanel.getHeight();
-
-        int columnCount = (int) Math.ceil(Math.sqrt(canvasCount));
-        int rowCount = (int) Math.ceil((double) canvasCount / columnCount);
-
-        gridLayout.setColumns(1);
-        gridLayout.setRows(canvasCount);
-
-        canvasPanel.revalidate();
-    }
-
     private void addCanvas() {
-        if (canvasCount >= 3) {
-            JOptionPane.showMessageDialog(this, "You cannot add more than 4 canvases.");
+        int maxPlayers = info.getMinMaxPlayer() & 0xffff;
+        if ((canvasCount+1) >= maxPlayers) {
+            JOptionPane.showMessageDialog(this, "You cannot add more canvases (max players reached).");
             return;
         }
 
@@ -234,10 +223,9 @@ public class Main extends JFrame {
         canvasPanel.repaint();
 
         canvasCount++;
-        updateGridLayout();
+        canvasPanel.revalidate();
 
-        removeButton.setEnabled(canvasCount > 0);
-        addButton.setEnabled(canvasCount < 3);
+        updateButtons();
     }
 
     private void removeCanvas() {
@@ -251,10 +239,17 @@ public class Main extends JFrame {
         canvasPanel.repaint();
 
         canvasCount--;
-        updateGridLayout();
+        canvasPanel.revalidate();
 
+        updateButtons();
+    }
+
+    private void updateButtons() {
+        int max = info.getMinMaxPlayer() & 0xffff;
+        int min = info.getMinMaxPlayer() >> 16;
+        addButton.setEnabled((canvasCount+1)<max);
         removeButton.setEnabled(canvasCount > 0);
-        addButton.setEnabled(canvasCount < 3);
+        startButton.setEnabled((canvasCount+1)>=min && (canvasCount+1)<=max);
     }
 
     public static void main(String[] args) {
