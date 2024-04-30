@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -27,12 +26,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -113,23 +113,29 @@ public class BaseBoard extends JPanel implements ClientPanel,
 //		}
 	}
 
+	Clip[] sounds=new Clip[0];
 	public boolean getSoundPack(String o,String[] sound){
-//		Prepare.consoleLog("Getting sound file: "+prefix);
-//		String packName=prefix;
-//		if(o!=null) packName=o;
-//		if(clips==null){
-//			//if(packName!=null && packName.equals("base")) clips=Prepare.baseClips;
-//			//else{
-//				clips=new Sounds(packName,sound);
-//				clips.loadS(packName, null);
-//			//}
-//			//Prepare.audioStore.put(packName, clips);
-//		}
+		sounds=new Clip[sound.length];
+		for(int i=0; i<sound.length; i++) {
+			try {
+			Clip sou = AudioSystem.getClip();
+			 sou.open(AudioSystem.getAudioInputStream(new File("assets/"+sound[i])));
+			 sou.start();
+			 sou.stop();
+			 sounds[i]=sou;
+			}catch(Exception ex) { ex.printStackTrace(); }
+		}		
 		return true;
 	}
 	
 	public void playSound(int id){
-//		if(pauseMode==-1)
+		if(spielerNr!=0) return;
+		try {
+		Clip sound = sounds[id];
+		 sound.setFramePosition(0);
+		 sound.start();
+		}catch(Exception ex) { ex.printStackTrace(); }
+		 //		if(pauseMode==-1)
 //			clips.playSound(id);
 	}
 	

@@ -216,7 +216,7 @@ public class Main extends JFrame {
     }
 
     private void addCanvas() {
-        if (canvasCount >= 3) {
+        if (canvasCount >= 5) {
             JOptionPane.showMessageDialog(this, "You cannot add more than 4 canvases.");
             return;
         }
@@ -237,7 +237,7 @@ public class Main extends JFrame {
         updateGridLayout();
 
         removeButton.setEnabled(canvasCount > 0);
-        addButton.setEnabled(canvasCount < 3);
+        addButton.setEnabled(canvasCount < 5);
     }
 
     private void removeCanvas() {
@@ -254,7 +254,7 @@ public class Main extends JFrame {
         updateGridLayout();
 
         removeButton.setEnabled(canvasCount > 0);
-        addButton.setEnabled(canvasCount < 3);
+        addButton.setEnabled(canvasCount < 5);
     }
 
     public static void main(String[] args) {
